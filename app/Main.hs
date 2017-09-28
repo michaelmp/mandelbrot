@@ -19,15 +19,20 @@ import Data.Colour.Palette.BrewerSet
 
 main = mainWith plot
 
-palette = brewerSet RdPu 9
+palette = brewerSet style size ++ reverse (brewerSet style size) where
+  size = 11
+  style = PiYG
 
-resolution = 80
+resolution = 200
 
-xMin = -2.0
-xMax = 2.0
+imageLocus = (-0.1011) :+ 0.9563
+imageScale = 0.05
+
+xMin = realPart imageLocus - imageScale
+xMax = realPart imageLocus + imageScale
 xInc = (xMax - xMin) / resolution
-yMin = -2.0
-yMax = 2.0
+yMin = imagPart imageLocus - imageScale
+yMax = imagPart imageLocus + imageScale
 yInc = (yMax - yMin) / resolution
 
 plot :: Diagram B
