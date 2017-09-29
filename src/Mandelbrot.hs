@@ -1,17 +1,25 @@
 module Mandelbrot where
 
+import Data.List
 import Data.Complex
 import Data.Maybe
 
 type Point = Complex Double
 
-iterations = 100
+iterations = 1000
 
 mandelbrot :: Point -> Point -> Point
 mandelbrot orbit accumulation = accumulation ^^ 2 + orbit
 
 series :: Point -> [Point]
 series c = iterate (mandelbrot c) (0 :+ 0)
+
+period :: Point -> Maybe Int
+period c = helper 0 (take iterations (series c)) [] where
+  helper count (z:zs) memory = if z `elem` memory
+    then z `elemIndex` memory >>= (\i -> Just (i + 1))
+    else helper (count + 1) zs (z:memory)
+  helper count [] memory = Nothing
 
 escaped :: Point -> Bool
 escaped c = 4 < (realPart c * realPart c + imagPart c * imagPart c)
