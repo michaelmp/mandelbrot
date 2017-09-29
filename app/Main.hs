@@ -21,7 +21,7 @@ main = mainWith plot
 
 palette = reverse set ++ set where
   set = brewerSet style size
-  style = YlOrRd
+  style = BuPu
   size = 9
 
 resolution = 100
@@ -29,8 +29,8 @@ resolution = 100
 trident = (-0.1011) :+ 0.9563
 armpit = (-0.75) :+ 0
 
-imageLocus = armpit - (0.25 :+ 0)
-imageScale = 0.5
+imageLocus = 0 :+ 0.75
+imageScale = 0.75
 
 xMin = realPart imageLocus - imageScale
 xMax = realPart imageLocus + imageScale
@@ -39,8 +39,10 @@ yMin = imagPart imageLocus - imageScale
 yMax = imagPart imageLocus + imageScale
 yInc = (yMax - yMin) / resolution
 
+showPeriod = True
+
 plot :: Diagram B
-plot = gridCat' (resolution + 1) $ map drawPoint [(x, y) | y <- ys, x <- xs] where
+plot = gridCat' (resolution + 1) $ map drawPoint [(x, y) | y <- reverse ys, x <- xs] where
   drawPoint (x, y) =
     let
       c = (x :+ y)
@@ -48,6 +50,10 @@ plot = gridCat' (resolution + 1) $ map drawPoint [(x, y) | y <- ys, x <- xs] whe
     in
       if d < iterations
         then square 1 # fc (palette !! (d `mod` length palette)) # lw none
-        else text (show $ fromMaybe 0 (period c)) # fc white --square 1 # fc black # lw none 
+        else
+          (if showPeriod
+            then text (show $ fromMaybe 0 (period c)) # fc white
+            else mempty)
+          `atop` square 1 # fc black # lw none 
   xs = [xMin, (xMin + xInc) .. xMax]
   ys = [yMin, (yMin + yInc) .. yMax]
