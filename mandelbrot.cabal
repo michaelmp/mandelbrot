@@ -25,11 +25,12 @@ executable mandelbrot-exe
   ghc-options:         -threaded -rtsopts -with-rtsopts=-N
   build-depends:       base
                      , mandelbrot
+                     , parallel
                      , colour
                      , palette
-                     , diagrams-lib
-                     , diagrams-svg
-                     , diagrams-contrib
+                     , bytestring
+                     , bytestring-conversion
+                     , bmp
   default-language:    Haskell2010
 
 test-suite mandelbrot-test
