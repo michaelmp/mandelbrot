@@ -13,7 +13,7 @@ import Data.Maybe
 
 import Data.Word
 
-import Data.Colour.SRGB (toSRGB)
+import Data.Colour.SRGB (sRGB, toSRGB)
 import Data.Colour.RGBSpace
 import Data.Colour.Palette.BrewerSet
 
@@ -37,7 +37,7 @@ imageScale = 0.05
 palette :: [Kolor]
 palette = reverse set ++ set where
   set = brewerSet style size
-  style = BuPu
+  style = RdPu
   size = 9
 
 xMin = realPart imageLocus - imageScale
@@ -56,7 +56,9 @@ divMap = withStrategy (parListChunk chunkSize rpar) . map divergence
 
 -- Assign a color to a divergence value in [0..iterations].
 colorify :: Int -> Kolor
-colorify d = palette !! (d `mod` length palette)
+colorify d = if d < iterations
+  then palette !! (d `mod` length palette)
+  else sRGB 0.0 0.0 0.0
 
 normalizeColor :: Double -> Word8
 normalizeColor val = fromIntegral $ floor (val * 255)
