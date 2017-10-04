@@ -6,10 +6,10 @@ import Data.Maybe
 
 type Point = Complex Double
 
-iterations = 1000
+iterations = 100
 
 mandelbrot :: Point -> Point -> Point
-mandelbrot orbit accumulation = accumulation ^^ 2 + orbit
+mandelbrot c z = z ^^ 2 + c 
 
 series :: Point -> [Point]
 series c = iterate (mandelbrot c) (0 :+ 0)
