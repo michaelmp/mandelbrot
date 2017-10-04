@@ -6,7 +6,7 @@ import Data.Maybe
 
 type Point = Complex Double
 
-iterations = 100
+iterations = 1000
 
 mandelbrot :: Point -> Point -> Point
 mandelbrot c z = z ^^ 2 + c 

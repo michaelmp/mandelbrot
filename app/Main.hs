@@ -22,7 +22,7 @@ import Data.ByteString.Conversion
 import Codec.BMP
 
 -- Number of samples per dimension.
-resolution = 800
+resolution = 2400
 
 -- How many samples to calculate in each parallel unit of work.
 chunkSize = 100
@@ -33,8 +33,8 @@ trident = (-0.1011) :+ 0.9563
 seahorse = (-0.75) :+ 0.01
 origin = 0 :+ 0
 
-imageLocus = seahorse 
-imageScale = 0.05
+imageLocus = starburst
+imageScale = 0.02
 
 palette :: [Kolor]
 palette = let
@@ -57,16 +57,19 @@ divMap :: [Complex Double] -> [Int]
 divMap = withStrategy (parListChunk chunkSize rpar) . map divergence
 
 normalizeDiv :: Int -> Double
-normalizeDiv d = fromIntegral d / 100 --fromIntegral iterations
+normalizeDiv d = fromIntegral d / 200 --fromIntegral iterations
 
 -- Assign a color to a divergence value in [0..iterations].
 colorify :: Int -> Kolor
-colorify d = let cap = length palette in
-  if d < iterations
-  then
-    let intensity = min (normalizeDiv d) 1
-    in sRGB intensity 0.0 intensity 
-  else sRGB 0.0 0.0 0.0
+colorify d = let
+  cap = length palette
+  nDiv = normalizeDiv d
+  in
+    if d < iterations
+    then
+      let intensity = min (nDiv * nDiv) 1
+      in sRGB intensity intensity intensity 
+    else sRGB 0.0 0.0 0.0
 
 normalizeColor :: Double -> Word8
 normalizeColor val = fromIntegral $ floor (val * 256)
